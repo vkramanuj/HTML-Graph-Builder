@@ -7,6 +7,7 @@ class HTMLObject(object):
 		self.link = link
 		self.source = "null"
 		self.links = []
+		self.parsed = []
 
 	def get_source(self, noReturn = False):
 		if self.source == "null":
@@ -31,13 +32,23 @@ class HTMLObject(object):
 		if not noReturn:
 			return self.links
 
+	def parsed_links(self):
+		if self.parsed == []:
+			self.parsed = [(link if link[0:4] == "http" else self.link + link) for a, b, link, d in self.get_links()]
+		
+		return self.parsed
+
 	def update(self, link = None):
 		if link is None:
 			link = self.link
 		
 		self.link = link
+		self.source = "null"
+		self.links = []
+		self.parsed = []
 		self.get_source(True)
 		self.get_links(True)
+		self.parsed_links()
 
 	def link(self):
 		return self.link
